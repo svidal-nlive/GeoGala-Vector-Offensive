@@ -1,0 +1,24 @@
+{
+  "visited_urls": [
+    "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes",
+    "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Touch_events",
+    "https://www.w3.org/TR/webaudio/",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API",
+    "https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode",
+    "https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData",
+    "https://developer.mozilla.org/en-US/docs/Web/CSS/env",
+    "https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
+    "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API",
+    "https://web.dev/performance/",
+    "https://developer.chrome.com/docs/devtools/memory"
+  ],
+  "total_pages_fetched": 17,
+  "fetch_timestamp": "2025-10-31T00:00:00Z",
+  "notes": "Authoritative sources from allowlist: MDN Web Docs, W3C, webkit.org, web.dev, Chrome DevTools docs. All links verified and content ingested. No duplicates in this run."
+}
