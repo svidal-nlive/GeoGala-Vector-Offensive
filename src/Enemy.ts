@@ -15,6 +15,9 @@ export class Enemy extends Entity {
   aiTimer = 0;
   aiAngle = 0;
   baseSpeed = 150;
+  damageFlashTimer = 0;
+  deathAnimTimer = 0;
+  isDying = false;
 
   constructor(faction: Faction = 'triangle') {
     super();
@@ -58,12 +61,29 @@ export class Enemy extends Entity {
     this.timeSinceLastFire = 0;
     this.aiTimer = 0;
     this.aiAngle = 0;
+    this.damageFlashTimer = 0;
+    this.deathAnimTimer = 0;
+    this.isDying = false;
     this.assignFactionStats();
   }
 
   update(dt: number): void {
     this.timeSinceLastFire += dt;
     this.aiTimer += dt;
+
+    // Damage flash countdown
+    if (this.damageFlashTimer > 0) {
+      this.damageFlashTimer -= dt;
+    }
+
+    // Death animation
+    if (this.isDying) {
+      this.deathAnimTimer += dt;
+      if (this.deathAnimTimer >= 0.3) {
+        this.alive = false;
+      }
+      return;
+    }
 
     // Apply faction-specific AI patterns
     this.updateAI(dt);
@@ -110,8 +130,10 @@ export class Enemy extends Entity {
 
   takeDamage(amount: number): void {
     this.health = Math.max(0, this.health - amount);
+    this.damageFlashTimer = 0.2; // Flash for 200ms
     if (this.health <= 0) {
-      this.alive = false;
+      this.isDying = true;
+      this.deathAnimTimer = 0;
     }
   }
 
@@ -120,7 +142,18 @@ export class Enemy extends Entity {
 
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.fillStyle = COLORS.enemy;
+
+    // Death animation - shrink and fade
+    if (this.isDying) {
+      const progress = this.deathAnimTimer / 0.3;
+      const scale = 1 - progress;
+      ctx.scale(scale, scale);
+      ctx.globalAlpha = 1 - progress;
+    }
+
+    // Damage flash - flicker every 50ms
+    const shouldFlash = this.damageFlashTimer > 0 && Math.floor(this.damageFlashTimer * 20) % 2 === 0;
+    ctx.fillStyle = shouldFlash ? '#ffffff' : COLORS.enemy;
 
     switch (this.faction) {
     case 'triangle':
@@ -141,22 +174,37 @@ export class Enemy extends Entity {
   }
 
   private drawTriangle(ctx: CanvasRenderingContext2D): void {
+    // Pointing down
     ctx.beginPath();
-    ctx.moveTo(0, -this.radius);
-    ctx.lineTo(this.radius, this.radius);
-    ctx.lineTo(-this.radius, this.radius);
+    ctx.moveTo(0, this.radius);
+    ctx.lineTo(this.radius, -this.radius);
+    ctx.lineTo(-this.radius, -this.radius);
     ctx.closePath();
     ctx.fill();
+
+    // White outline
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 
   private drawSquare(ctx: CanvasRenderingContext2D): void {
+    // Rotated 45 degrees
+    ctx.save();
+    ctx.rotate(Math.PI / 4);
     ctx.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
+    
+    // White outline
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
+    ctx.restore();
   }
 
   private drawHexagon(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
     for (let i = 0; i < 6; i++) {
-      const angle = (i / 6) * Math.PI * 2;
+      const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
       const x = Math.cos(angle) * this.radius;
       const y = Math.sin(angle) * this.radius;
       if (i === 0) ctx.moveTo(x, y);
@@ -164,15 +212,26 @@ export class Enemy extends Entity {
     }
     ctx.closePath();
     ctx.fill();
+
+    // White outline
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 
   private drawDiamond(ctx: CanvasRenderingContext2D): void {
+    // Diamond on-point
     ctx.beginPath();
     ctx.moveTo(0, -this.radius);
-    ctx.lineTo(this.radius, 0);
+    ctx.lineTo(this.radius * 0.7, 0);
     ctx.lineTo(0, this.radius);
-    ctx.lineTo(-this.radius, 0);
+    ctx.lineTo(-this.radius * 0.7, 0);
     ctx.closePath();
     ctx.fill();
+
+    // White outline
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 }

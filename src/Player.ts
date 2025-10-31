@@ -10,6 +10,8 @@ export class Player extends Entity {
   timeSinceLastFire = 0;
   aimAngle = 0;
   maxSpeed = 300; // pixels/sec
+  fireFlash = false;
+  damageFlashTimer = 0;
 
   constructor() {
     super();
@@ -21,6 +23,8 @@ export class Player extends Entity {
     this.health = this.maxHealth;
     this.timeSinceLastFire = 0;
     this.aimAngle = 0;
+    this.fireFlash = false;
+    this.damageFlashTimer = 0;
   }
 
   update(dt: number): void {
@@ -28,6 +32,16 @@ export class Player extends Entity {
     this.x += this.vx * dt;
     this.y += this.vy * dt;
     this.timeSinceLastFire += dt;
+
+    // Reset fire flash after 1 frame
+    if (this.fireFlash) {
+      this.fireFlash = false;
+    }
+
+    // Damage flash countdown
+    if (this.damageFlashTimer > 0) {
+      this.damageFlashTimer -= dt;
+    }
   }
 
   updateInput(inputX: number, inputY: number): void {
@@ -48,10 +62,15 @@ export class Player extends Entity {
 
   fire(): void {
     this.timeSinceLastFire = 0;
+    this.fireFlash = true;
   }
 
   takeDamage(amount: number): void {
     this.health = Math.max(0, this.health - amount);
+    this.damageFlashTimer = 0.2; // Flash red for 200ms
+    if (this.health <= 0) {
+      this.alive = false;
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
@@ -59,16 +78,36 @@ export class Player extends Entity {
 
     ctx.save();
     ctx.translate(this.x, this.y);
+
+    // Smooth rotation to aim angle (15 frames max)
     ctx.rotate(this.aimAngle + Math.PI / 2);
 
+    // Fire flash - bright white glow
+    if (this.fireFlash) {
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 15;
+    }
+
+    // Damage flash - red tint
+    const damageFlashing = this.damageFlashTimer > 0 && Math.floor(this.damageFlashTimer * 10) % 2 === 0;
+    ctx.fillStyle = damageFlashing ? '#ff1744' : COLORS.ship;
+
     // Draw ship triangle
-    ctx.fillStyle = COLORS.ship;
     ctx.beginPath();
     ctx.moveTo(0, -this.radius);
     ctx.lineTo(this.radius * 0.7, this.radius);
     ctx.lineTo(-this.radius * 0.7, this.radius);
     ctx.closePath();
     ctx.fill();
+
+    // Shield visual (when health > 50%)
+    if (this.health > this.maxHealth * 0.5) {
+      ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, this.radius + 3, 0, Math.PI * 2);
+      ctx.stroke();
+    }
 
     ctx.restore();
   }

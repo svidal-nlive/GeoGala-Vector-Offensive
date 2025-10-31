@@ -14,6 +14,7 @@ import { COLORS, FRAME_BUDGET, ENTITY } from './utils/constants';
 import { WaveManager } from './WaveManager';
 import { LootManager } from './LootManager';
 import { DamageCalculator } from './DamageCalculator';
+import { EffectManager } from './EffectManager';
 
 class Game {
   renderer: Renderer;
@@ -25,6 +26,7 @@ class Game {
   waveManager: WaveManager;
   lootManager: LootManager;
   damageCalculator: DamageCalculator;
+  effectManager: EffectManager;
 
   playerPool: EntityPool<Player>;
   enemyPool: EntityPool<Enemy>;
@@ -36,6 +38,8 @@ class Game {
   waveTransitionTimer = 0;
   gameOverTimer = 0;
   isGameOver = false;
+  showWaveTransition = false;
+  waveTransitionFade = 0;
 
   constructor() {
     this.renderer = new Renderer('game');
@@ -47,6 +51,7 @@ class Game {
     this.waveManager = new WaveManager();
     this.lootManager = new LootManager();
     this.damageCalculator = new DamageCalculator();
+    this.effectManager = new EffectManager();
 
     // Initialize entity pools
     this.playerPool = new EntityPool(ENTITY.playerPoolSize, () => new Player());
@@ -141,11 +146,22 @@ class Game {
 
     if (this.waveManager.isWaveComplete()) {
       this.waveTransitionTimer += dt;
+      this.showWaveTransition = true;
+      
+      // Fade in/out effect (0-0.5s fade in, 0.5-1.0s fade out)
+      if (this.waveTransitionTimer < 0.5) {
+        this.waveTransitionFade = this.waveTransitionTimer * 2; // 0 -> 1
+      } else {
+        this.waveTransitionFade = 2 - this.waveTransitionTimer * 2; // 1 -> 0
+      }
+
       if (this.waveTransitionTimer >= 1.0) {
         this.gameState.nextWave();
         this.waveManager.startWave(this.gameState.wave);
         this.waveTransitionTimer = 0;
+        this.showWaveTransition = false;
       }
+      return; // Pause gameplay during transition
     }
 
     // Input
@@ -161,6 +177,7 @@ class Game {
     this.enemyPool.update(dt);
     this.bulletPool.update(dt);
     this.lootManager.update(dt);
+    this.effectManager.update(dt);
 
     // Collisions
     this.handleCollisions();
@@ -264,6 +281,7 @@ class Game {
 
   private onEnemyDeath(enemy: Enemy): void {
     this.gameState.addScore(100);
+    this.effectManager.spawnExplosion(enemy.x, enemy.y, COLORS.enemy, 8);
     this.lootManager.spawnLoot(enemy.x, enemy.y, 'scrap', enemy.loot.scrap);
     if (enemy.loot.synergy > 0) {
       this.lootManager.spawnLoot(enemy.x, enemy.y, 'synergy', enemy.loot.synergy);
@@ -305,6 +323,7 @@ class Game {
     this.enemyPool.clear();
     this.bulletPool.clear();
     this.lootManager.clear();
+    this.effectManager.clear();
 
     // Respawn player
     this.player = this.playerPool.acquire(
@@ -327,6 +346,9 @@ class Game {
 
     // Draw loot
     this.lootManager.draw(this.renderer.getContext());
+
+    // Draw effects (particles)
+    this.effectManager.draw(this.renderer.getContext());
 
     // Draw entities
     if (this.player?.alive) {
@@ -381,6 +403,24 @@ class Game {
         12,
         COLORS.ui,
       );
+    }
+
+    // Wave Transition screen
+    if (this.showWaveTransition) {
+      const ctx = this.renderer.getContext();
+      ctx.save();
+      ctx.globalAlpha = this.waveTransitionFade;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(0, 0, this.renderer.getWidth(), this.renderer.getHeight());
+
+      this.renderer.drawText(
+        `Wave ${this.gameState.wave + 1}`,
+        this.renderer.getWidth() / 2 - 60,
+        this.renderer.getHeight() / 2,
+        36,
+        COLORS.ship,
+      );
+      ctx.restore();
     }
 
     // Game Over screen
@@ -438,7 +478,7 @@ class Game {
         COLORS.warning,
       );
       this.renderer.drawText(
-        `Entities: ${this.enemyPool.getActive().length + this.bulletPool.getActive().length + this.lootManager.getActiveLoot().length}`,
+        `Entities: ${this.enemyPool.getActive().length + this.bulletPool.getActive().length + this.lootManager.getActiveLoot().length + this.effectManager.getParticleCount()}`,
         10,
         this.renderer.getHeight() - 40,
         14,

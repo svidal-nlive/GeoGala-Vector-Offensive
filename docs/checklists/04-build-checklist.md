@@ -9,7 +9,7 @@ last_update_utc: 2025-10-31T16:41:00Z
 
 ## Status Summary
 
-- Total: 16 • Open: 4 • Done: 12 • Revised: 0 • Blocked: 0  
+- Total: 16 • Open: 3 • Done: 13 • Revised: 0 • Blocked: 0  
 
 ## Tasks
 
@@ -23,7 +23,7 @@ last_update_utc: 2025-10-31T16:41:00Z
 - [x] MVP-ENT-PLAYER — Create Player entity  
 - [x] MVP-ENT-ENEMY — Create Enemy entity  
 - [x] MVP-ENT-BULLET — Create Bullet entity (+ pool if needed)  
-- [ ] MVP-ENT-EFFECT — Create Effect entity (optional)  
+- [x] MVP-ENT-EFFECT — Create Effect entity (optional)  
 - [x] MVP-HUD — Implement HUD (score/wave/lives)  
 - [ ] MVP-HARNESS — Build dev-harness HTML for testing  
 - [ ] MVP-CONFIG — Sync docs/Balance.md to config/balance.js  
@@ -46,3 +46,5 @@ last_update_utc: 2025-10-31T16:41:00Z
 | 2025-10-31T16:41:00Z | Completed | Sprint 1: Wave System, Loot, Damage, HUD | WaveManager.ts, LootManager.ts, DamageCalculator.ts |
 | 2025-10-31T16:41:00Z | Upgraded | Vite v7.1.12 + Terser | package.json |
 | 2025-10-31T16:41:00Z | Build | Success (24.82 KB gzipped: 6.76 KB) | dist/ |
+| 2025-10-31T17:30:00Z | Completed | Sprint 2: Enhanced Rendering & Visual Effects | Enemy/Player visual feedback, EffectManager.ts, wave transitions |
+| 2025-10-31T17:30:00Z | Build | Success (27.81 KB gzipped: 7.41 KB) | dist/ |
