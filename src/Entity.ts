@@ -85,9 +85,11 @@ export class EntityPool<T extends Entity> {
   }
 
   clear(): void {
-    this.active.forEach((e) => e.deactivate());
+    this.active.forEach((e) => {
+      e.deactivate();
+      this.pool.push(e);
+    });
     this.active = [];
-    this.pool = [];
   }
 
   update(dt: number): void {

@@ -135,6 +135,7 @@ Vanilla HTML/CSS/JS (ES modules), single DPR-aware Canvas 2D, 60 FPS hard target
    - Trails (optional): 2-frame position history for motion blur effect
 
 4. **HUD Layout** (`src/HUD.ts`)
+
    ```
    Top-left:
      Wave: 1
@@ -147,6 +148,7 @@ Vanilla HTML/CSS/JS (ES modules), single DPR-aware Canvas 2D, 60 FPS hard target
    Bottom-center (debug mode only, toggle D):
      FPS: 60 | P95: 14.2ms | Entities: 12
    ```
+
    - Text: Courier New, 14px, white (#ffffff)
    - WCAG AA verified (4.5:1 contrast on navy bg #0a0e27)
    - Methods: `drawHUD(renderer, gameState)`, `drawDebugInfo(renderer, perf)`

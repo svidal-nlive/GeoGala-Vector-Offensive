@@ -8,6 +8,7 @@ last_update_utc: 2025-10-31T23:59:00Z
 # Project Scaffolder — Live Checklist
 
 ## Status Summary
+
 - Total: 20 • Open: 0 • Done: 20 • Revised: 0 • Blocked: 0
 
 ## Tasks
@@ -36,6 +37,7 @@ last_update_utc: 2025-10-31T23:59:00Z
 ## Deliverables Completed
 
 ✅ **14 Core Source Files** (src/ + src/utils/):
+
 - `main.ts` — RAF game loop with delta-time, debug HUD
 - `GameState.ts` — Run state manager with workshop persistence
 - `Renderer.ts` — Canvas DPR-aware renderer
@@ -52,6 +54,7 @@ last_update_utc: 2025-10-31T23:59:00Z
 - `utils/constants.ts` — Game constants (colors, frame budget, deadzone)
 
 ✅ **Updated Configuration Files**:
+
 - `index.html` — Viewport meta (viewport-fit=cover), safe-area CSS, canvas setup
 - `styles.css` — WCAG AA contrast, mobile-first responsive, prefers-reduced-motion support
 - `eslint.config.js` — ESLint v9 config with TypeScript parser + DOM globals
@@ -59,12 +62,14 @@ last_update_utc: 2025-10-31T23:59:00Z
 - `vite.config.js` — (existing, validated)
 
 ✅ **Asset Stubs**:
+
 - `public/audio/music.mp3` — Placeholder (empty)
 - `public/audio/sfx/fire.mp3` — Placeholder (empty)
 - `public/audio/sfx/hit.mp3` — Placeholder (empty)
 - `public/audio/sfx/upgrade.mp3` — Placeholder (empty)
 
 ✅ **Validation**:
+
 - ESLint: 17 warnings (console statements, unused imports—acceptable), 0 errors
 - Prettier: All files auto-formatted
 - Vite: Dev server running at http://localhost:5173 without errors
@@ -84,6 +89,7 @@ last_update_utc: 2025-10-31T23:59:00Z
 ## File Manifest
 
 ### Source Files (14 files)
+
 - src/main.ts (207 lines)
 - src/GameState.ts (77 lines)
 - src/Renderer.ts (97 lines)
@@ -100,12 +106,14 @@ last_update_utc: 2025-10-31T23:59:00Z
 - src/utils/constants.ts (48 lines)
 
 ### Configuration (4 files)
+
 - index.html (244 lines)
 - styles.css (89 lines)
 - eslint.config.js (44 lines)
 - package.json, vite.config.js, .prettierrc.json, .eslintrc.json (existing)
 
 ### Documentation (3 files)
+
 - docs/PHASE_03_KICKOFF.md
 - docs/Notes.md
 - docs/checklists/02-research-checklist.md

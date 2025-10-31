@@ -11,6 +11,9 @@ import { Bullet } from './Bullet';
 import { EntityPool } from './Entity';
 import { PerformanceMonitor } from './utils/performance';
 import { COLORS, FRAME_BUDGET, ENTITY } from './utils/constants';
+import { WaveManager } from './WaveManager';
+import { LootManager } from './LootManager';
+import { DamageCalculator } from './DamageCalculator';
 
 class Game {
   renderer: Renderer;
@@ -19,6 +22,9 @@ class Game {
   audioManager: AudioManager;
   collisionSystem: CollisionSystem;
   performanceMonitor: PerformanceMonitor;
+  waveManager: WaveManager;
+  lootManager: LootManager;
+  damageCalculator: DamageCalculator;
 
   playerPool: EntityPool<Player>;
   enemyPool: EntityPool<Enemy>;
@@ -27,6 +33,9 @@ class Game {
   player: Player | null = null;
   debugMode = false;
   lastFrameTime = 0;
+  waveTransitionTimer = 0;
+  gameOverTimer = 0;
+  isGameOver = false;
 
   constructor() {
     this.renderer = new Renderer('game');
@@ -35,6 +44,9 @@ class Game {
     this.audioManager = new AudioManager();
     this.collisionSystem = new CollisionSystem();
     this.performanceMonitor = new PerformanceMonitor();
+    this.waveManager = new WaveManager();
+    this.lootManager = new LootManager();
+    this.damageCalculator = new DamageCalculator();
 
     // Initialize entity pools
     this.playerPool = new EntityPool(ENTITY.playerPoolSize, () => new Player());
@@ -78,6 +90,7 @@ class Game {
 
   start(): void {
     this.gameState.startRun();
+    this.waveManager.startWave(1);
     this.lastFrameTime = performance.now();
     requestAnimationFrame(this.gameLoop.bind(this));
   }
@@ -105,24 +118,57 @@ class Game {
   };
 
   private update(dt: number): void {
-    if (!this.player?.alive) return;
+    if (this.isGameOver) {
+      this.gameOverTimer += dt;
+      // Handle restart
+      const input = this.inputHandler.getInput();
+      if (input.fire && this.gameOverTimer > 1.0) {
+        this.restart();
+      }
+      return;
+    }
+
+    if (!this.player?.alive) {
+      this.handleGameOver();
+      return;
+    }
+
+    // Reset damage tracking
+    this.damageCalculator.resetFrame();
+
+    // Wave management
+    this.waveManager.update(dt, this.enemyPool, this.renderer.getWidth());
+
+    if (this.waveManager.isWaveComplete()) {
+      this.waveTransitionTimer += dt;
+      if (this.waveTransitionTimer >= 1.0) {
+        this.gameState.nextWave();
+        this.waveManager.startWave(this.gameState.wave);
+        this.waveTransitionTimer = 0;
+      }
+    }
 
     // Input
     const input = this.inputHandler.getInput();
     this.player.updateInput(input.x, input.y);
 
+    // Constrain player to bottom area
+    this.player.x = Math.max(this.player.radius, Math.min(this.renderer.getWidth() - this.player.radius, this.player.x + this.player.vx * dt));
+    this.player.y = Math.max(500, Math.min(this.renderer.getHeight() - this.player.radius, this.player.y + this.player.vy * dt));
+
     // Entity updates
     this.player.update(dt);
-    this.playerPool.update(dt);
     this.enemyPool.update(dt);
     this.bulletPool.update(dt);
+    this.lootManager.update(dt);
 
-    // Collisions (placeholder, no damage logic yet)
-    const pairs = this.collisionSystem.checkCollisions([
-      this.player,
-      ...this.enemyPool.getActive(),
-      ...this.bulletPool.getActive(),
-    ]);
+    // Collisions
+    this.handleCollisions();
+
+    // Loot collection
+    this.lootManager.collectLoot(this.player, (type, amount) => {
+      this.gameState.addResources(type, amount);
+    });
 
     // Fire
     if (input.fire && this.player.canFire()) {
@@ -143,10 +189,144 @@ class Game {
         );
       }
     }
+
+    // Enemy firing
+    this.enemyPool.getActive().forEach((enemy) => {
+      if (enemy.canFire()) {
+        enemy.fire();
+        const angle = Math.atan2(this.player!.y - enemy.y, this.player!.x - enemy.x);
+        const bullet = this.bulletPool.acquire(
+          enemy.x,
+          enemy.y,
+          Math.cos(angle) * 200,
+          Math.sin(angle) * 200,
+        );
+        if (bullet) {
+          bullet.resetWithType(
+            enemy.x,
+            enemy.y,
+            Math.cos(angle) * 200,
+            Math.sin(angle) * 200,
+            'enemy',
+          );
+        }
+      }
+    });
+
+    // Remove out-of-bounds entities
+    this.removeOutOfBounds();
+  }
+
+  private handleCollisions(): void {
+    const playerBullets = this.bulletPool.getActive().filter((b) => b.bulletType === 'player');
+    const enemyBullets = this.bulletPool.getActive().filter((b) => b.bulletType === 'enemy');
+    const enemies = this.enemyPool.getActive();
+
+    // Player bullets vs enemies
+    playerBullets.forEach((bullet) => {
+      enemies.forEach((enemy) => {
+        const dx = bullet.x - enemy.x;
+        const dy = bullet.y - enemy.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < bullet.radius + enemy.radius) {
+          this.damageCalculator.applyPlayerBulletDamage(bullet, enemy);
+          if (enemy.health <= 0) {
+            this.onEnemyDeath(enemy);
+          }
+        }
+      });
+    });
+
+    // Enemy bullets vs player
+    if (this.player) {
+      enemyBullets.forEach((bullet) => {
+        const dx = bullet.x - this.player!.x;
+        const dy = bullet.y - this.player!.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < bullet.radius + this.player!.radius) {
+          this.damageCalculator.applyEnemyBulletDamage(bullet, this.player!);
+          this.gameState.onPlayerHit();
+        }
+      });
+
+      // Enemy collision with player
+      enemies.forEach((enemy) => {
+        const dx = enemy.x - this.player!.x;
+        const dy = enemy.y - this.player!.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < enemy.radius + this.player!.radius) {
+          this.damageCalculator.applyEnemyCollisionDamage(enemy, this.player!);
+          this.gameState.onPlayerHit();
+        }
+      });
+    }
+  }
+
+  private onEnemyDeath(enemy: Enemy): void {
+    this.gameState.addScore(100);
+    this.lootManager.spawnLoot(enemy.x, enemy.y, 'scrap', enemy.loot.scrap);
+    if (enemy.loot.synergy > 0) {
+      this.lootManager.spawnLoot(enemy.x, enemy.y, 'synergy', enemy.loot.synergy);
+    }
+    this.waveManager.onEnemyDeath();
+    enemy.alive = false;
+  }
+
+  private removeOutOfBounds(): void {
+    const width = this.renderer.getWidth();
+    const height = this.renderer.getHeight();
+
+    this.bulletPool.getActive().forEach((bullet) => {
+      if (bullet.x < -20 || bullet.x > width + 20 || bullet.y < -20 || bullet.y > height + 20) {
+        bullet.alive = false;
+      }
+    });
+
+    this.enemyPool.getActive().forEach((enemy) => {
+      if (enemy.y > height + 50) {
+        enemy.alive = false;
+        this.waveManager.onEnemyDeath();
+      }
+    });
+  }
+
+  private handleGameOver(): void {
+    this.isGameOver = true;
+    this.gameOverTimer = 0;
+    this.gameState.endRun();
+  }
+
+  private restart(): void {
+    this.isGameOver = false;
+    this.gameOverTimer = 0;
+    this.waveTransitionTimer = 0;
+
+    // Reset pools
+    this.enemyPool.clear();
+    this.bulletPool.clear();
+    this.lootManager.clear();
+
+    // Respawn player
+    this.player = this.playerPool.acquire(
+      this.renderer.getWidth() / 2,
+      this.renderer.getHeight() - 50,
+      0,
+      0,
+    );
+    if (this.player) {
+      this.player.reset(this.renderer.getWidth() / 2, this.renderer.getHeight() - 50);
+    }
+
+    // Restart game state
+    this.gameState.startRun();
+    this.waveManager.startWave(1);
   }
 
   private render(): void {
     this.renderer.clear();
+
+    // Draw loot
+    this.lootManager.draw(this.renderer.getContext());
 
     // Draw entities
     if (this.player?.alive) {
@@ -164,31 +344,108 @@ class Game {
       COLORS.ui,
     );
     this.renderer.drawText(
-      `Score: ${this.gameState.score}`,
+      `Score: ${this.gameState.score} (×${this.gameState.multiplier.toFixed(1)})`,
       10,
       40,
       16,
       COLORS.ui,
     );
+    this.renderer.drawText(
+      `Scrap: ${this.gameState.resources.scrap} | Synergy: ${this.gameState.resources.synergy}`,
+      10,
+      60,
+      16,
+      COLORS.ui,
+    );
+
+    // Health bar
+    if (this.player) {
+      const healthPercent = this.player.health / this.player.maxHealth;
+      const barWidth = 150;
+      const barHeight = 10;
+      const barX = this.renderer.getWidth() - barWidth - 10;
+      const barY = 10;
+
+      const ctx = this.renderer.getContext();
+      ctx.fillStyle = '#333';
+      ctx.fillRect(barX, barY, barWidth, barHeight);
+      ctx.fillStyle = healthPercent > 0.5 ? '#00ff88' : healthPercent > 0.25 ? '#ffeb3b' : '#ff1744';
+      ctx.fillRect(barX, barY, barWidth * healthPercent, barHeight);
+      ctx.strokeStyle = '#fff';
+      ctx.strokeRect(barX, barY, barWidth, barHeight);
+
+      this.renderer.drawText(
+        `HP: ${this.player.health}/${this.player.maxHealth}`,
+        barX,
+        barY - 5,
+        12,
+        COLORS.ui,
+      );
+    }
+
+    // Game Over screen
+    if (this.isGameOver) {
+      const ctx = this.renderer.getContext();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, this.renderer.getWidth(), this.renderer.getHeight());
+
+      this.renderer.drawText(
+        'GAME OVER',
+        this.renderer.getWidth() / 2 - 80,
+        this.renderer.getHeight() / 2 - 60,
+        32,
+        COLORS.warning,
+      );
+      this.renderer.drawText(
+        `Final Score: ${this.gameState.score}`,
+        this.renderer.getWidth() / 2 - 100,
+        this.renderer.getHeight() / 2 - 10,
+        20,
+        COLORS.ui,
+      );
+      this.renderer.drawText(
+        `Best Score: ${this.gameState.bestScore}`,
+        this.renderer.getWidth() / 2 - 90,
+        this.renderer.getHeight() / 2 + 20,
+        18,
+        COLORS.ui,
+      );
+      if (this.gameOverTimer > 1.0) {
+        this.renderer.drawText(
+          'Press SPACE to retry',
+          this.renderer.getWidth() / 2 - 95,
+          this.renderer.getHeight() / 2 + 60,
+          16,
+          COLORS.ship,
+        );
+      }
+    }
 
     // Debug HUD
     if (this.debugMode) {
       this.renderer.drawText(
         `FPS: ${this.performanceMonitor.getFps()}`,
         10,
-        this.renderer.getHeight() - 60,
+        this.renderer.getHeight() - 80,
         14,
         COLORS.warning,
       );
       this.renderer.drawText(
         `P95: ${this.performanceMonitor.getP95FrameTime().toFixed(2)}ms`,
         10,
+        this.renderer.getHeight() - 60,
+        14,
+        COLORS.warning,
+      );
+      this.renderer.drawText(
+        `Entities: ${this.enemyPool.getActive().length + this.bulletPool.getActive().length + this.lootManager.getActiveLoot().length}`,
+        10,
         this.renderer.getHeight() - 40,
         14,
         COLORS.warning,
       );
       this.renderer.drawText(
-        `Entities: ${this.enemyPool.getActive().length + this.bulletPool.getActive().length}`,
+        `Wave Progress: ${this.waveManager.getWaveProgress().alive}/${this.waveManager.getWaveProgress().total}`,
         10,
         this.renderer.getHeight() - 20,
         14,

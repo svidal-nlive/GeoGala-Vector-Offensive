@@ -12,6 +12,9 @@ export class Enemy extends Entity {
   fireRate = 0.5; // seconds
   timeSinceLastFire = 0;
   loot = { scrap: 10, synergy: 0, rare: 0 };
+  aiTimer = 0;
+  aiAngle = 0;
+  baseSpeed = 150;
 
   constructor(faction: Faction = 'triangle') {
     super();
@@ -53,11 +56,48 @@ export class Enemy extends Entity {
     super.reset(x, y, vx, vy);
     this.health = this.maxHealth;
     this.timeSinceLastFire = 0;
+    this.aiTimer = 0;
+    this.aiAngle = 0;
+    this.assignFactionStats();
   }
 
   update(dt: number): void {
-    super.update(dt);
     this.timeSinceLastFire += dt;
+    this.aiTimer += dt;
+
+    // Apply faction-specific AI patterns
+    this.updateAI(dt);
+
+    // Movement
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+  }
+
+  private updateAI(dt: number): void {
+    switch (this.faction) {
+    case 'triangle':
+      // Linear downward movement (already set in reset)
+      break;
+    case 'square':
+      // Sinusoidal horizontal + downward
+      this.vx = Math.sin(this.aiTimer * 2) * 100;
+      this.vy = this.baseSpeed;
+      break;
+    case 'hexagon':
+      // Spiral descent
+      this.aiAngle += dt * 2;
+      this.vx = Math.cos(this.aiAngle) * 80;
+      this.vy = this.baseSpeed * 0.8;
+      break;
+    case 'diamond':
+      // Erratic movement (change angle every 1s)
+      if (this.aiTimer % 1.0 < dt) {
+        this.aiAngle = Math.random() * Math.PI * 2;
+      }
+      this.vx = Math.cos(this.aiAngle) * 120;
+      this.vy = Math.sin(this.aiAngle) * 60 + this.baseSpeed * 0.5;
+      break;
+    }
   }
 
   canFire(): boolean {

@@ -10,6 +10,8 @@ export class GameState {
   wave = 0;
   score = 0;
   multiplier = 1.0;
+  comboCounter = 0;
+  noHitWave = true;
   resources = {
     scrap: 0,
     synergy: 0,
@@ -17,21 +19,47 @@ export class GameState {
   };
   workshopUpgrades: Map<string, WorkshopUpgrade> = new Map();
   isRunActive = false;
+  bestScore = 0;
+  runCount = 0;
 
   constructor() {
     this.loadWorkshopUpgrades();
+    this.loadRunStats();
   }
 
   startRun(): void {
     this.wave = 1;
     this.score = 0;
     this.multiplier = 1.0;
+    this.comboCounter = 0;
+    this.noHitWave = true;
     this.resources = { scrap: 0, synergy: 0, rare: 0 };
     this.isRunActive = true;
+    this.runCount++;
+    this.saveRunStats();
   }
 
   endRun(): void {
     this.isRunActive = false;
+    if (this.score > this.bestScore) {
+      this.bestScore = this.score;
+      this.saveRunStats();
+    }
+  }
+
+  nextWave(): void {
+    this.wave++;
+    this.multiplier = Math.min(2.0, 1.0 + (this.wave - 1) * 0.1); // Cap at 2.0x
+
+    // Bonus for no-hit waves
+    if (this.noHitWave) {
+      this.score = Math.floor(this.score * 1.1);
+    }
+    this.noHitWave = true; // Reset for next wave
+  }
+
+  onPlayerHit(): void {
+    this.noHitWave = false;
   }
 
   addScore(points: number): void {
@@ -79,7 +107,31 @@ export class GameState {
     this.wave = 0;
     this.score = 0;
     this.multiplier = 1.0;
+    this.comboCounter = 0;
+    this.noHitWave = true;
     this.resources = { scrap: 0, synergy: 0, rare: 0 };
     this.isRunActive = false;
+  }
+
+  loadRunStats(): void {
+    try {
+      const data = localStorage.getItem('geogala_run_stats');
+      if (data) {
+        const stats = JSON.parse(data) as { bestScore: number; runCount: number };
+        this.bestScore = stats.bestScore || 0;
+        this.runCount = stats.runCount || 0;
+      }
+    } catch (e) {
+      console.error('Failed to load run stats:', e);
+    }
+  }
+
+  saveRunStats(): void {
+    try {
+      const stats = { bestScore: this.bestScore, runCount: this.runCount };
+      localStorage.setItem('geogala_run_stats', JSON.stringify(stats));
+    } catch (e) {
+      console.error('Failed to save run stats:', e);
+    }
   }
 }
