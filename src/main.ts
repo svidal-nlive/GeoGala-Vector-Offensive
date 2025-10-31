@@ -15,11 +15,13 @@ import { WaveManager } from './WaveManager';
 import { LootManager } from './LootManager';
 import { DamageCalculator } from './DamageCalculator';
 import { EffectManager } from './EffectManager';
+import { TouchControls } from './TouchControls';
 
 class Game {
   renderer: Renderer;
   gameState: GameState;
   inputHandler: InputHandler;
+  touchControls: TouchControls;
   audioManager: AudioManager;
   collisionSystem: CollisionSystem;
   performanceMonitor: PerformanceMonitor;
@@ -45,6 +47,7 @@ class Game {
     this.renderer = new Renderer('game');
     this.gameState = new GameState();
     this.inputHandler = new InputHandler(this.renderer.canvas);
+    this.touchControls = new TouchControls(this.renderer.canvas);
     this.audioManager = new AudioManager();
     this.collisionSystem = new CollisionSystem();
     this.performanceMonitor = new PerformanceMonitor();
@@ -81,20 +84,28 @@ class Game {
 
   private setupResume(): void {
     window.addEventListener('pointerdown', () => {
-      this.audioManager.resumeContext().catch(() => {
-        console.warn('Audio context resume failed');
-      });
+      this.audioManager.resumeContext();
     });
 
     window.addEventListener('keydown', () => {
-      this.audioManager.resumeContext().catch(() => {
-        console.warn('Audio context resume failed');
-      });
+      this.audioManager.resumeContext();
     });
   }
 
   start(): void {
     this.gameState.startRun();
+    
+    // Load audio assets
+    this.audioManager.loadAndCacheAudio('fire', '/audio/sfx/fire.mp3');
+    this.audioManager.loadAndCacheAudio('hit', '/audio/sfx/hit.mp3');
+    this.audioManager.loadAndCacheAudio('upgrade', '/audio/sfx/upgrade.mp3');
+    this.audioManager.loadAndCacheAudio('music', '/audio/music.mp3');
+    
+    // Start music after a short delay
+    window.setTimeout(() => {
+      this.audioManager.playMusicByKey('music', true);
+    }, 500);
+    
     this.waveManager.startWave(1);
     this.lastFrameTime = performance.now();
     requestAnimationFrame(this.gameLoop.bind(this));
@@ -164,9 +175,16 @@ class Game {
       return; // Pause gameplay during transition
     }
 
-    // Input
-    const input = this.inputHandler.getInput();
-    this.player.updateInput(input.x, input.y);
+    // Input (merge keyboard and touch)
+    this.touchControls.update();
+    const keyboardInput = this.inputHandler.getInput();
+    const touchInput = this.touchControls.input;
+    
+    const finalX = keyboardInput.x || touchInput.x;
+    const finalY = keyboardInput.y || touchInput.y;
+    const finalFire = keyboardInput.fire || touchInput.fire;
+    
+    this.player.updateInput(finalX, finalY);
 
     // Constrain player to full screen (Chicken Invaders style - move anywhere!)
     this.player.x = Math.max(this.player.radius, Math.min(this.renderer.getWidth() - this.player.radius, this.player.x));
@@ -185,11 +203,13 @@ class Game {
     // Loot collection
     this.lootManager.collectLoot(this.player, (type, amount) => {
       this.gameState.addResources(type, amount);
+      this.audioManager.playSfxByKey('upgrade'); // Collect sound
     });
 
     // Fire
-    if (input.fire && this.player.canFire()) {
+    if (finalFire && this.player.canFire()) {
       this.player.fire();
+      this.audioManager.playSfxByKey('fire'); // Fire sound
       const bullet = this.bulletPool.acquire(
         this.player.x,
         this.player.y,
@@ -281,6 +301,7 @@ class Game {
 
   private onEnemyDeath(enemy: Enemy): void {
     this.gameState.addScore(100);
+    this.audioManager.playSfxByKey('hit'); // Enemy death sound
     this.effectManager.spawnExplosion(enemy.x, enemy.y, COLORS.enemy, 8);
     this.lootManager.spawnLoot(enemy.x, enemy.y, 'scrap', enemy.loot.scrap);
     if (enemy.loot.synergy > 0) {
@@ -312,6 +333,7 @@ class Game {
     this.isGameOver = true;
     this.gameOverTimer = 0;
     this.gameState.endRun();
+    this.audioManager.stopMusic(); // Stop music on game over
   }
 
   private restart(): void {
@@ -339,6 +361,11 @@ class Game {
     // Restart game state
     this.gameState.startRun();
     this.waveManager.startWave(1);
+    
+    // Restart music
+    window.setTimeout(() => {
+      this.audioManager.playMusicByKey('music', true);
+    }, 200);
   }
 
   private render(): void {
@@ -460,6 +487,9 @@ class Game {
         );
       }
     }
+
+    // Draw touch controls (mobile)
+    this.touchControls.draw(this.renderer.getContext());
 
     // Debug HUD
     if (this.debugMode) {
