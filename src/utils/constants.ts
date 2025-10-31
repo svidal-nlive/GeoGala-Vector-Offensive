@@ -2,12 +2,16 @@
 // WCAG AA verified colors, frame budget targets, input parameters
 
 export const COLORS = {
-  bg: '#0a0e27', // Deep navy
+  bg: '#0b1020', // Deep navy (glassmorphic bg)
   ship: '#00ff88', // Bright cyan
   enemy: '#ff1744', // Neon red
   bullet: '#ffeb3b', // Bright yellow
-  ui: '#ffffff', // White (4.5:1 contrast on bg)
-  warning: '#ff6b6b', // Red for warnings
+  ui: '#e8f0ff', // Light blue-white (glassmorphic UI text)
+  uiMuted: '#b6c3ff', // Muted blue (secondary text)
+  accent: '#77e1ff', // Bright cyan accent
+  accent2: '#8b7bff', // Purple accent
+  warning: '#ff6b8b', // Soft red (warnings)
+  ok: '#7dffcf', // Mint green (success)
 } as const;
 
 export const FRAME_BUDGET = {

@@ -168,9 +168,9 @@ class Game {
     const input = this.inputHandler.getInput();
     this.player.updateInput(input.x, input.y);
 
-    // Constrain player to bottom area
-    this.player.x = Math.max(this.player.radius, Math.min(this.renderer.getWidth() - this.player.radius, this.player.x + this.player.vx * dt));
-    this.player.y = Math.max(500, Math.min(this.renderer.getHeight() - this.player.radius, this.player.y + this.player.vy * dt));
+    // Constrain player to full screen (Chicken Invaders style - move anywhere!)
+    this.player.x = Math.max(this.player.radius, Math.min(this.renderer.getWidth() - this.player.radius, this.player.x));
+    this.player.y = Math.max(this.player.radius, Math.min(this.renderer.getHeight() - this.player.radius, this.player.y));
 
     // Entity updates
     this.player.update(dt);

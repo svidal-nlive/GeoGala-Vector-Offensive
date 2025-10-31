@@ -9,9 +9,13 @@ export class Player extends Entity {
   fireRate = 0.1; // seconds
   timeSinceLastFire = 0;
   aimAngle = 0;
-  maxSpeed = 300; // pixels/sec
+  maxSpeed = 450; // pixels/sec (Chicken Invaders style - faster, more responsive)
+  acceleration = 2200; // pixels/sec² (smooth acceleration)
+  deceleration = 1800; // pixels/sec² (smooth stop)
   fireFlash = false;
   damageFlashTimer = 0;
+  targetVx = 0;
+  targetVy = 0;
 
   constructor() {
     super();
@@ -25,10 +29,37 @@ export class Player extends Entity {
     this.aimAngle = 0;
     this.fireFlash = false;
     this.damageFlashTimer = 0;
+    this.targetVx = 0;
+    this.targetVy = 0;
   }
 
   update(dt: number): void {
-    // Base update (position delta applied externally)
+    // Smooth inertia-based movement (Chicken Invaders style)
+    // Accelerate towards target velocity
+    const dvx = this.targetVx - this.vx;
+    const dvy = this.targetVy - this.vy;
+    
+    if (Math.abs(dvx) > 0.1 || Math.abs(dvy) > 0.1) {
+      // Accelerating
+      const accelRate = this.acceleration * dt;
+      this.vx += Math.sign(dvx) * Math.min(Math.abs(dvx), accelRate);
+      this.vy += Math.sign(dvy) * Math.min(Math.abs(dvy), accelRate);
+    } else {
+      // Decelerate to stop
+      const decelRate = this.deceleration * dt;
+      if (Math.abs(this.vx) > decelRate) {
+        this.vx -= Math.sign(this.vx) * decelRate;
+      } else {
+        this.vx = 0;
+      }
+      if (Math.abs(this.vy) > decelRate) {
+        this.vy -= Math.sign(this.vy) * decelRate;
+      } else {
+        this.vy = 0;
+      }
+    }
+
+    // Apply movement
     this.x += this.vx * dt;
     this.y += this.vy * dt;
     this.timeSinceLastFire += dt;
@@ -47,12 +78,14 @@ export class Player extends Entity {
   updateInput(inputX: number, inputY: number): void {
     const inputMag = Math.sqrt(inputX * inputX + inputY * inputY);
     if (inputMag > 0) {
-      this.vx = (inputX / inputMag) * this.maxSpeed;
-      this.vy = (inputY / inputMag) * this.maxSpeed;
+      // Set target velocity (normalized)
+      this.targetVx = (inputX / inputMag) * this.maxSpeed;
+      this.targetVy = (inputY / inputMag) * this.maxSpeed;
       this.aimAngle = Math.atan2(inputY, inputX);
     } else {
-      this.vx = 0;
-      this.vy = 0;
+      // No input - target is to stop
+      this.targetVx = 0;
+      this.targetVy = 0;
     }
   }
 
