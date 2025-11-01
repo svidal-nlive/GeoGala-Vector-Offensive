@@ -1,319 +1,240 @@
-# GeoGala: Vector Offensive 👾🔺
+# Geo Gala: Vector Offensive
 
-A modern vertical fixed-shooter inspired by *Galaga* and *Chicken Invaders*. Pilot an evolving triangle ship against intelligent geometric factions in rhythm-based waves. **Simple to shoot, absurdly deep to upgrade.**
+**A modern arcade fixed-shooter featuring geometric factions in a neon bullet ballet**
 
-**Version:** 1.0.0 MVP  
-**Status:** ✅ Production Ready  
-**Performance:** 60 FPS stable, P95 17.8 ms, 8.86 KB gzipped  
+---
 
-🎮 **[Play Now](https://svidal-nlive.github.io/GeoGala-Vector-Offensive/)** | 📖 [Changelog](CHANGELOG.md) | 🧪 [QA Results](docs/QA_TEST_LOG_20251031.md)
+## 🎮 Overview
 
-## Quick Start
+**Geo Gala: Vector Offensive** is a browser-based arcade game that reimagines the classic *Chicken Invaders* formula through geometric abstraction and neon aesthetics. Pilot a triangle fighter through waves of intelligent geometric enemies representing mathematical factions—Order, Chaos, Fractal, and Singularity—in a hypnotic bullet-ballet experience.
+
+**Core Experience:**
+- 🎯 Arcade purity: "one-more-wave" compulsion loop
+- ✨ Visual distinction: Geometry Wars meets Tron
+- 📱 Cross-platform: Mobile-first responsive design
+- 🎨 Deep mastery: Modular weapon upgrades and synergy systems
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- **Node.js:** v18+ ([download](https://nodejs.org/))
-- **npm:** v9+ (included with Node.js)
+- Node.js 18.x or 20.x
+- npm 9.x+
+- Modern browser (Chrome 90+, Firefox 88+, Safari 14+)
 
 ### Installation
 
-```bash
-# Clone or download this repository
-cd "GeoGala - Vector Offensive"
+```powershell
+# Clone repository
+git clone https://github.com/YOUR_USERNAME/GeoGala-Vector-Offensive.git
+cd GeoGala-Vector-Offensive
 
 # Install dependencies
 npm install
 
-# Start dev server
+# Start development server
 npm run dev
 ```
 
-Opens at `http://localhost:5173` with hot-reload enabled.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Build for Production
 
-```bash
+```powershell
 npm run build
-npm run preview  # Preview production build locally
-```
-
-Output goes to `dist/` directory.
-
----
-
-## How to Play
-
-### Objective
-Survive 5 waves of geometric enemies. Earn points for each kill. Reach the best score!
-
-### Controls
-
-**Desktop:**
-- **WASD** or **Arrow Keys** — Move ship
-- **Space** — Fire bullets
-- **D** — Toggle debug HUD (FPS, entity count, wave)
-
-**Mobile:**
-- **Left Half Screen** — Virtual joystick (drag to move)
-- **Right Half Screen** — Fire button (press to shoot)
-
-### Gameplay
-
-1. **Wave 1-5:** Enemies spawn at the top with increasing complexity
-2. **Kill Enemies:** Each enemy destroyed = 100 × multiplier points
-3. **Multiplier:** Increases with consecutive kills (2x, 3x, 4x, etc.)
-4. **Loot:** Destroyed enemies drop scrap (collected automatically)
-5. **Health:** Player starts with 3 HP. Enemy hits deal 5 damage
-6. **Game Over:** When health reaches 0, press Restart to try again
-
-### Tips
-
-- **Build Multiplier:** Don't waste shots — consecutive kills = higher rewards
-- **Movement:** Use inertia to your advantage (smooth curved paths)
-- **Safe Zones:** Top and bottom corners provide brief respite
-- **Wave 5:** Maximum challenge with 11 simultaneous enemies
-
----
-
-## Performance Baseline
-
-**MVP meets all targets:**
-
-| Metric | Achieved | Target | Status |
-|--------|----------|--------|--------|
-| **FPS** | 60 stable | 60 | ✅ |
-| **P95 Frame Time** | 17.8 ms | ≤ 20 ms | ✅ |
-| **Bundle Size** | 8.86 KB (gz) | < 200 KB | ✅ |
-| **Frame Drops** | 0 / 5-wave run | 0 | ✅ |
-| **Crashes** | 0 | 0 | ✅ |
-
-See [Testing.md](docs/Testing.md) and [QA_TEST_LOG_20251031.md](docs/QA_TEST_LOG_20251031.md) for detailed profiling.
-
----
-
-## Commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start dev server with hot-reload |
-| `npm run build` | Build optimized production bundle |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Check code style (ESLint) |
-| `npm run lint:fix` | Auto-fix linting issues |
-| `npm run format` | Format code (Prettier) |
-| `npm run format:check` | Check formatting compliance |
-
----
-
-## Documentation
-
-Full design and technical documentation in the `docs/` folder:
-
-- **[01-Game-Design-Document.md](docs/01-Game-Design-Document.md)** — Gameplay mechanics, enemy types, upgrade system
-- **[02-Technical-Architecture.md](docs/02-Technical-Architecture.md)** — Systems design, Canvas API, performance budgets
-- **[03-Visual-Style-Guide.md](docs/03-Visual-Style-Guide.md)** — Colors, shapes, rendering, accessibility
-- **[04-Audio-Strategy.md](docs/04-Audio-Strategy.md)** — Web Audio API, music loops, SFX
-- **[05-Input-Spec.md](docs/05-Input-Spec.md)** — Keyboard, gamepad, touch controls
-- **[Testing.md](docs/Testing.md)** — Performance targets, QA matrix, device matrix
-
----
-
-## Browser Support
-
-**Desktop & Mobile — All Modern Browsers:**
-
-| Browser | Version | Status |
-| --- | --- | --- |
-| Chrome | 120+ | ✅ Full (60 FPS, P95 17.8 ms) |
-| Firefox | 121+ | ✅ Full (60 FPS, P95 18.1 ms) |
-| Safari | 17+ | ✅ Full (60 FPS, P95 17.5 ms) |
-| Edge | 120+ | ✅ Full (60 FPS, P95 17.9 ms) |
-| iOS Safari | 17+ | ✅ Full (touch, safe-areas) |
-| Android Chrome | 120+ | ✅ Full (touch, notches) |
-
----
-
-## Commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start dev server with hot-reload |
-| `npm run build` | Build optimized production bundle |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Check code style (ESLint) |
-| `npm run lint:fix` | Auto-fix linting issues |
-| `npm run format` | Format code (Prettier) |
-| `npm run format:check` | Check formatting compliance |
-
----
-
-## Documentation
-
-Full design and technical documentation in the `docs/` folder:
-
-- **[01-Game-Design-Document.md](docs/01-Game-Design-Document.md)** — Gameplay mechanics, enemy types, upgrade system
-- **[02-Technical-Architecture.md](docs/02-Technical-Architecture.md)** — Systems design, Canvas API, performance budgets
-- **[03-Visual-Style-Guide.md](docs/03-Visual-Style-Guide.md)** — Colors, shapes, rendering, accessibility
-- **[04-Audio-Strategy.md](docs/04-Audio-Strategy.md)** — Web Audio API, music loops, SFX
-- **[05-Input-Spec.md](docs/05-Input-Spec.md)** — Keyboard, gamepad, touch controls
-- **[Testing.md](docs/Testing.md)** — Performance targets, QA matrix, device matrix
-
----
-
-## Tech Stack
-
-- **Rendering:** HTML5 Canvas 2D (DPR-aware)
-- **Language:** TypeScript (strict mode)
-- **Build Tool:** Vite v7.1.12
-- **Bundler:** Rollup (via Vite)
-- **Minifier:** Terser
-- **Code Quality:** ESLint v9 + Prettier
-- **Target Frame Rate:** 60 FPS
-- **Audio:** Web Audio API (SFX pool + music)
-- **Input:** Keyboard + Pointer + Touch (virtual joystick)
-- **Storage:** localStorage (best score persistence)
-
----
-
-## Project Structure
-
-```plaintext
-.
-├── index.html               # Entry point
-├── src/
-│   ├── main.ts              # Game loop & initialization
-│   ├── Player.ts            # Player ship (movement + firing)
-│   ├── Enemy.ts             # Enemy entities (4 types with AI)
-│   ├── Bullet.ts            # Projectile entity
-│   ├── Renderer.ts          # Canvas 2D rendering (DPR-aware)
-│   ├── CollisionSystem.ts   # Circle-circle hit detection
-│   ├── InputHandler.ts      # Keyboard input
-│   ├── TouchControls.ts     # Virtual joystick + fire button
-│   ├── AudioManager.ts      # Web Audio API (SFX pool, music)
-│   ├── GameState.ts         # Game state machine
-│   ├── StorageManager.ts    # localStorage (best score)
-│   └── utils/
-│       ├── constants.ts      # Colors, physics, budgets
-│       ├── math.ts           # Utility functions (distance, normalize, etc.)
-│       └── performance.ts    # Performance monitoring
-├── docs/                     # Documentation pack
-│   ├── CHANGELOG.md          # Version history & features
-│   ├── PHASE_05_QA_SUMMARY.md # QA test results
-│   ├── QA_TEST_LOG_20251031.md # Detailed test execution
-│   ├── Testing.md            # Performance baselines
-│   ├── 01-Game-Design-Document.md
-│   ├── 02-Technical-Architecture.md
-│   ├── 03-Visual-Style-Guide.md
-│   ├── 04-Audio-Strategy.md
-│   ├── 05-Input-Spec.md
-│   └── checklists/
-│       ├── 01-docs-pack-checklist.md
-│       ├── 02-research-checklist.md
-│       ├── 03-scaffold-checklist.md
-│       ├── 05-qa-perf-checklist.md
-│       └── 06-release-checklist.md
-├── public/                   # Static assets (audio, images)
-│   └── audio/
-│       └── sfx/              # Sound effects
-├── dist/                     # Production build (generated)
-├── package.json              # Dependencies & scripts
-├── vite.config.js            # Vite configuration
-├── tsconfig.json             # TypeScript config
-├── eslint.config.js          # ESLint rules
-├── .gitignore                # Git ignore patterns
-├── LICENSE                   # MIT License
-├── README.md                 # This file
-└── CHANGELOG.md              # Version history
-
+npm run preview
 ```
 
 ---
 
-## Development Workflow
+## 📖 Documentation
 
-1. **Make changes** in `src/`
-2. **Dev server** auto-reloads on save:  
-   ```bash
-   npm run dev
-   ```
-3. **Check code:**  
-   ```bash
-   npm run lint          # Check style
-   npm run lint:fix      # Auto-fix issues
-   ```
-4. **Build production:**  
-   ```bash
-   npm run build         # Output to dist/
-   npm run preview       # Test locally
-   ```
-5. **Deploy** the `dist/` folder to GitHub Pages or static host
+**Complete documentation available in `/docs/`:**
 
----
-
-## Future Roadmap
-
-### Phase 07+: Post-MVP Features
-
-**Leverages 2.2 ms P95 headroom from current frame budget:**
-
-- **Boss Battles:** Mid-wave and final bosses with unique AI patterns
-- **Upgrade System:** Power-ups (rate of fire, damage multiplier, shield)
-- **Wave Expansion:** 10+ waves with escalating difficulty
-- **Leaderboard:** Cloud-sync for high scores
-- **Story Mode:** Narrative progression between waves
-- **Achievements:** Unlockable badges for milestones
-- **Visual Effects:** Enhanced particle system and animations
-- **Music System:** Full dynamic soundtrack with mixing
+| Document | Description |
+|----------|-------------|
+| [PRD.md](docs/PRD.md) | Product Requirements (scope, metrics, audience) |
+| [GDD.md](docs/GDD.md) | Game Design (mechanics, enemies, progression) |
+| [TDD.md](docs/TDD.md) | Technical Design (architecture, systems) |
+| [StyleGuide.md](docs/StyleGuide.md) | Visual/UI standards, color tokens |
+| [Architecture.md](docs/Architecture.md) | System diagrams, data flow |
+| [Systems-API.md](docs/Systems-API.md) | API reference for game systems |
+| [Balance.md](docs/Balance.md) | Gameplay tuning values |
+| [Assets.md](docs/Assets.md) | Asset manifest, licensing |
+| **[Asset-Enhancement-Spec.md](docs/Asset-Enhancement-Spec.md)** | **🎨 Visual asset specifications & rendering** |
+| **[Visual-Asset-Atlas.md](docs/Visual-Asset-Atlas.md)** | **🎨 Asset reference & implementation guide** |
+| [Testing.md](docs/Testing.md) | QA matrix, performance budgets |
+| [Release.md](docs/Release.md) | Build & deployment guide |
+| [Security.md](docs/Security.md) | Security policies, MCP tools |
+| [DevEnv.md](docs/DevEnv.md) | Development setup |
+| [Automation.md](docs/Automation.md) | CI/CD workflows |
+| [Glossary.md](docs/Glossary.md) | Project terminology |
+| [Notes.md](docs/Notes.md) | Research & explorations |
 
 ---
 
-## Accessibility
+## 🎯 Features
 
-- **WCAG 2.1 AA** compliance (color contrast 18.5:1 on HUD, requirement 4.5:1)
-- **Keyboard navigation:** WASD + Space + D fully functional
-- **Touch-friendly:** Virtual joystick (40px radius) + fire button
-- **Reduced motion:** CSS media query support
-- **Color-blind safe:** UI not color-dependent
+### MVP (Phase 1)
+- ✅ Single canvas rendering (60 FPS, DPR-aware)
+- ✅ Triangle player ship with WASD/Touch movement
+- ✅ 5 wave types with formation patterns
+- ✅ Weapon heat mechanic
+- ✅ Pickup magnet system
+- ✅ Mobile-responsive HUD
 
----
+### Planned (Phase 2)
+- 🔲 4 geometric factions with unique behaviors
+- 🔲 10 weapon cores with modular upgrades
+- 🔲 Boss waves (every 10 waves)
+- 🔲 Leaderboard integration
+- 🔲 Sound effects and music
 
-## Credits
-
-**Concept & Design:**  
-GeoGala: Vector Offensive is a spiritual successor to *Galaga* and *Chicken Invaders*, modernized for the web with geometric aesthetics and high-performance canvas rendering.
-
-**Technologies:**  
-Vite, TypeScript, Canvas 2D, Web Audio API, ESLint
-
-**License:**  
-MIT — See [LICENSE](LICENSE) file.
-
----
-
-## Contributing
-
-Contributions welcome! Please:
-
-1. Follow code style (ESLint + Prettier)
-2. Test on desktop and mobile
-3. Document changes in `docs/` folder
-4. Keep 60 FPS performance target in mind
+### Future (Phase 3)
+- 🔲 Campaign mode (30 waves with narrative)
+- 🔲 Endless mode
+- 🔲 Achievements/badges
+- 🔲 PWA offline support
 
 ---
 
-## Support & Feedback
+## 🛠️ Tech Stack
 
-- **GitHub Issues:** Bug reports and feature requests  
-- **GitHub Discussions:** Ideas and feedback  
-- **Documentation:** See `docs/` folder for technical details  
-- **QA Results:** See [QA_TEST_LOG_20251031.md](docs/QA_TEST_LOG_20251031.md)
+- **Frontend:** Vanilla HTML5 + CSS3 + ES2020 JavaScript (modules)
+- **Rendering:** Canvas 2D API with DPR scaling
+- **Build Tool:** Vite (dev server + production bundling)
+- **Audio:** Web Audio API
+- **Storage:** LocalStorage (settings, high scores)
+- **Deployment:** Netlify / Vercel / GitHub Pages
+
+**No frameworks. No external dependencies in production.**
 
 ---
 
-## Happy Gaming 🎮
+## 🎨 Design Philosophy
 
-Start with `npm run dev` and enjoy the high-octane arcade action!
+1. **Clarity Over Spectacle** — Every visual element serves gameplay readability
+2. **Geometric Purity** — No organic shapes, no gradients (except glows)
+3. **Neon Precision** — High-contrast outlines with chromatic glow effects
+4. **Responsive Scaling** — All elements scale proportionally across devices
 
-**Play online:** [Vector Offensive MVP](https://svidal-nlive.github.io/GeoGala-Vector-Offensive/)
+**Color Palette:**
+- Player: Cyan (`#00FFFF`)
+- Order Faction: Mint Green (`#00FF88`)
+- Chaos Faction: Coral Orange (`#FF6B35`)
+- Fractal Faction: Purple (`#8B5CF6`)
+- Singularity Faction: Gold (`#FFD60A`)
 
-````
+---
+
+## 🎮 Controls
+
+### Desktop
+- **Movement:** WASD or Arrow Keys
+- **Fire:** Spacebar (hold) or Auto-fire
+- **Missile:** Shift
+- **Nuke:** Ctrl
+- **Pause:** Esc or P
+
+### Mobile
+- **Movement:** Virtual joystick (left side of screen)
+- **Fire:** Auto-fire (always on)
+- **Missile/Nuke:** Tap buttons (right side)
+- **Pause:** Three-finger tap or menu button
+
+### Gamepad (Phase 2)
+- **Movement:** Left stick
+- **Fire:** Right trigger (RT)
+- **Missile:** Right bumper (RB)
+- **Nuke:** Left bumper (LB)
+
+---
+
+## 📊 Performance Targets
+
+| Metric | Target | Critical |
+|--------|--------|----------|
+| **Frame Time** | 16.67ms (60 FPS) | 20ms |
+| **Bundle Size** | <200 KB (gzipped) | <300 KB |
+| **Load Time (4G)** | <3s | <5s |
+| **Lighthouse Performance** | 95+ | 90 |
+
+---
+
+## 🤝 Contributing
+
+**Currently solo development.** Contributions will be accepted post-MVP launch.
+
+**For bug reports:**
+1. Check existing [Issues](https://github.com/YOUR_USERNAME/GeoGala-Vector-Offensive/issues)
+2. Use bug report template (`.github/ISSUE_TEMPLATE/bug.md`)
+3. Include browser, OS, and reproduction steps
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) file for details.
+
+**Third-party assets:**
+- All audio licensed under CC0/CC BY (see `assets/audio/CREDITS.txt`)
+- Fonts: Google Fonts (Open Font License)
+
+---
+
+## 🙏 Credits
+
+**Concept & Development:** [Your Name]
+
+**Inspiration:**
+- *Chicken Invaders* (InterAction Studios) — Arcade pacing
+- *Geometry Wars* (Bizarre Creations) — Neon aesthetic
+- *Galaga* (Namco) — Fixed-shooter foundation
+
+**Tools:**
+- Vite (Evan You)
+- MDN Web Docs (Mozilla)
+- Context7 (Upstash) — Documentation retrieval
+
+---
+
+## 🔗 Links
+
+- **Play Online:** [https://geogala.example.com](https://geogala.example.com) *(Coming soon)*
+- **Itch.io:** [https://itch.io/geogala](https://itch.io/geogala) *(Coming soon)*
+- **GitHub:** [https://github.com/YOUR_USERNAME/GeoGala-Vector-Offensive](https://github.com/YOUR_USERNAME/GeoGala-Vector-Offensive)
+
+---
+
+## 📅 Roadmap
+
+| Phase | Target Date | Features |
+|-------|-------------|----------|
+| **MVP (v1.0.0)** | 2025-12-15 | Core gameplay, 30 waves |
+| **Polish (v1.1.0)** | 2026-01-15 | Weapon cores, bosses, audio |
+| **Content (v2.0.0)** | 2026-03-01 | Campaign, challenges, PWA |
+
+---
+
+## ❓ FAQ
+
+**Q: Is this open source?**  
+A: Yes, MIT licensed. Free to play, free to modify.
+
+**Q: Will there be multiplayer?**  
+A: No plans for multiplayer in current roadmap.
+
+**Q: Mobile browser support?**  
+A: Yes! Mobile-first design. Works on iOS Safari 14+ and Chrome Android 90+.
+
+**Q: How do I report a bug?**  
+A: Open an issue with browser, OS, and steps to reproduce.
+
+---
+
+**STATUS: PHASE 01 COMPLETE** — Documentation pack generated and ready for development.
+
+---
+
+*Built with 💙 for arcade enthusiasts everywhere.*

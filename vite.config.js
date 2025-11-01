@@ -1,36 +1,26 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: './', // Relative paths for portable deployment
   server: {
-    host: 'localhost',
-    port: 5173,
-    open: true,
-    hmr: {
-      protocol: 'ws',
-      host: 'localhost',
-      port: 5173,
-    },
+    port: 3000,
+    open: true
   },
   build: {
-    target: 'esnext',
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: false,
     minify: 'terser',
     terserOptions: {
       compress: {
         drop_console: true,
-      },
+        drop_debugger: true
+      }
     },
     rollupOptions: {
       output: {
-        entryFileNames: '[name].[hash].js',
-        chunkFileNames: '[name].[hash].js',
-        assetFileNames: '[name].[hash][extname]',
-      },
-    },
-    sourcemap: true,
-  },
-  preview: {
-    port: 5173,
-  },
+        manualChunks: undefined // Single bundle for small project
+      }
+    }
+  }
 });

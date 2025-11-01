@@ -1,72 +1,90 @@
-# Pull Request: GeoGala: Vector Offensive
+## 📋 Pull Request Summary
+<!-- Briefly describe what this PR accomplishes -->
 
-## Description
+## 🔗 Related Issues
+<!-- Link to related issues using #issue_number -->
+Closes #
 
-Brief summary of the changes in this PR.
+## ✨ Changes Made
+<!-- List the key changes in this PR -->
+- 
+- 
+- 
 
-## Type of Change
+## 🎯 Type of Change
+<!-- Check all that apply -->
+- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
+- [ ] ✨ New feature (non-breaking change which adds functionality)
+- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to change)
+- [ ] 📚 Documentation update
+- [ ] 🎨 Style/UI change (visual or cosmetic changes)
+- [ ] ⚡ Performance improvement
+- [ ] ♻️ Code refactor (no functional changes)
+- [ ] ✅ Test additions or updates
 
-- [ ] Bug fix (non-breaking change that fixes an issue)
-- [ ] New feature (non-breaking change that adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] Documentation update
-- [ ] Performance improvement
-- [ ] Code refactoring
+## 🧪 Testing Performed
+<!-- Describe the testing you did to verify your changes -->
+- [ ] Tested on desktop (Chrome/Firefox/Safari)
+- [ ] Tested on mobile (iOS/Android)
+- [ ] Tested with keyboard input
+- [ ] Tested with touch input
+- [ ] Performance testing (60 FPS maintained)
+- [ ] Cross-browser compatibility verified
+- [ ] No console errors or warnings
 
-## Related Issues
+**Test Scenarios:**
+1. 
+2. 
+3. 
 
-Closes #(issue number)
+## 📸 Screenshots / Videos
+<!-- Add screenshots or videos demonstrating the changes, if applicable -->
 
-## Changes Made
+**Before:**  
+<!-- Add screenshot or "N/A" -->
 
-- [ ] Change 1
-- [ ] Change 2
-- [ ] Change 3
+**After:**  
+<!-- Add screenshot or "N/A" -->
 
-## Testing
+## 📊 Performance Impact
+<!-- Describe any performance changes -->
+- **Bundle Size:** [No change / +X KB / -X KB]
+- **FPS:** [No change / Improved / Reduced]
+- **Load Time:** [No change / Faster / Slower]
 
-How have you tested these changes? Include:
-
-- [ ] Tested on desktop (browser: ___)
-- [ ] Tested on mobile (device: ___)
-- [ ] Tested with gamepad (model: ___)
-- [ ] FPS stable (≥ 55 FPS)
-- [ ] Input latency ≤ 50 ms
-- [ ] Audio working correctly
-
-## Performance Impact
-
-- [ ] No impact
-- [ ] Minor (< 1 ms frame time)
-- [ ] Moderate (1–5 ms frame time)
-- [ ] Significant (> 5 ms frame time)
-
-If significant, please explain mitigation strategies.
-
-## Documentation Updates
-
+## 📚 Documentation Updated
+<!-- Check all that apply -->
+- [ ] Code comments added/updated
 - [ ] README.md updated
-- [ ] Relevant docs/ files updated
-- [ ] Code comments added where needed
-- [ ] No documentation changes needed
+- [ ] docs/GDD.md updated (if gameplay changes)
+- [ ] docs/TDD.md updated (if technical changes)
+- [ ] docs/Balance.md updated (if balance changes)
+- [ ] docs/Glossary.md updated (if new terms added)
+- [ ] No documentation updates needed
 
-## Accessibility Checklist
-
-- [ ] Color contrast verified (WCAG AA 4.5:1)
-- [ ] Keyboard navigation tested
-- [ ] Touch targets min 44×44 px
-- [ ] Screen reader compatible
-- [ ] N/A (non-UI changes)
-
-## Checklist
-
-- [ ] Code follows style guide (ESLint + Prettier)
-- [ ] Self-review completed
+## ✔️ Checklist
+<!-- Ensure all items are complete before requesting review -->
+- [ ] Code follows project style guide (ESLint + Prettier)
+- [ ] Self-review of code completed
 - [ ] Comments added for complex logic
-- [ ] Documentation updated
-- [ ] No new console errors
-- [ ] No new performance regressions
+- [ ] No new warnings introduced
+- [ ] All tests pass locally
+- [ ] Branch is up-to-date with main
+- [ ] Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
+
+## 🔍 Reviewer Notes
+<!-- Anything specific reviewers should focus on? -->
+
+## 🚀 Deployment Notes
+<!-- Any special deployment considerations? -->
+- [ ] No special deployment steps needed
+- [ ] Requires new environment variables
+- [ ] Requires asset updates
+- [ ] Other: _______
 
 ---
 
-Thank you for contributing to GeoGala: Vector Offensive! 🎮
+**PR Author Checklist:**
+- [ ] I have read the [Contributing Guidelines](../CONTRIBUTING.md) (when available)
+- [ ] I have tested my changes thoroughly
+- [ ] I have updated relevant documentation

@@ -1,41 +1,52 @@
 ---
-name: Feature Request
-about: Suggest an idea for GeoGala
+name: ✨ Feature Request
+about: Suggest an idea or enhancement
 title: '[FEATURE] '
-labels: enhancement
+labels: ['enhancement', 'needs-discussion']
 assignees: ''
 ---
 
-## Feature Description
+## ✨ Feature Description
+A clear and concise description of the feature or enhancement.
 
-A clear and concise description of the feature you want to see added.
+## 🎯 Problem Statement
+What problem does this solve? What user need does it address?
 
-## Problem It Solves
+## 💡 Proposed Solution
+Describe how you envision this feature working.
 
-Explain the problem this feature addresses. Is it a new gameplay mechanic, UI improvement, or performance optimization?
+## 🎨 Design Considerations (if applicable)
+- Visual changes needed
+- UI/UX impact
+- Mobile vs. desktop differences
 
-## Proposed Solution
+## 🛠️ Technical Considerations (if applicable)
+- Performance impact
+- Complexity estimate (Low / Medium / High)
+- Dependencies or prerequisites
 
-How would you like this feature to work? Include mockups or pseudocode if helpful.
+## 🔄 Alternatives Considered
+What other solutions did you consider and why were they rejected?
 
-## Alternative Approaches
+## 📊 Success Metrics
+How would we measure the success of this feature?
 
-Are there other ways to achieve this goal?
+## 🎮 User Stories (if applicable)
+**As a** [user type]  
+**I want** [feature]  
+**So that** [benefit]
 
-## Priority
+## 📸 Mockups / References
+Add any mockups, wireframes, or references to similar implementations.
 
-- [ ] Nice-to-have (cosmetic, polish)
-- [ ] Moderate (improves gameplay or UX)
-- [ ] High (critical for core experience)
+## 🗺️ Phase Suggestion
+Which roadmap phase would this fit into?
+- [ ] MVP (v1.0.0) — Core gameplay
+- [ ] Polish (v1.1.0) — Weapon cores, bosses
+- [ ] Content (v2.0.0) — Campaign, challenges
+- [ ] Future — Nice-to-have
 
-## Related Issues / Discussions
-
-Link to any related issues or discussions.
-
-## Additional Context
-
-Any other information (e.g., reference to similar games, design documents).
-
----
-
-**We appreciate the suggestion!** Our team will review and prioritize.
+## ✔️ Checklist
+- [ ] I have searched existing issues to avoid duplicates
+- [ ] This aligns with the project's design philosophy
+- [ ] I am willing to contribute code for this feature (optional)

@@ -1,52 +1,45 @@
 ---
-name: Bug Report
-about: Report a bug or issue with GeoGala
+name: 🐛 Bug Report
+about: Report a bug or unexpected behavior
 title: '[BUG] '
-labels: bug
+labels: ['bug', 'needs-triage']
 assignees: ''
 ---
 
-## Description
-
+## 🐛 Bug Description
 A clear and concise description of what the bug is.
 
-## Steps to Reproduce
-
+## 🔁 Steps to Reproduce
 1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
+2. Click on '...'
+3. Scroll down to '...'
 4. See error
 
-## Expected Behavior
-
+## ✅ Expected Behavior
 What you expected to happen.
 
-## Actual Behavior
+## ❌ Actual Behavior
+What actually happened.
 
-What actually happened instead.
+## 📸 Screenshots
+If applicable, add screenshots to help explain your problem.
 
-## Environment
+## 🖥️ Environment
+- **OS:** [e.g., Windows 11, macOS 13, Android 12]
+- **Browser:** [e.g., Chrome 120, Firefox 121, Safari 17]
+- **Device:** [e.g., Desktop, iPhone 13, Pixel 5]
+- **Screen Size:** [e.g., 1920×1080, 375×667]
 
-- **Browser:** (e.g., Chrome 120, Safari 17)
-- **Device:** (e.g., Desktop, iPhone 15, Pixel 8)
-- **OS:** (e.g., Windows 11, macOS 14, Android 14)
-- **URL:** (link to the running game, if applicable)
+## 🎮 Game State (if applicable)
+- **Wave Number:** [e.g., Wave 7]
+- **Player HP:** [e.g., 2/3]
+- **Power Level:** [e.g., Level 5]
+- **Active Pickups:** [e.g., Heat Sink, Score Multiplier]
 
-## Screenshots / Video
+## 📋 Additional Context
+Add any other context about the problem here.
 
-If applicable, attach screenshots or a video recording of the bug.
-
-## Additional Context
-
-Any other context about the bug (e.g., network conditions, browser extensions).
-
-## Performance Impact
-
-- [ ] Affects frame rate (FPS < 55)
-- [ ] Causes audio issues
-- [ ] Impacts input responsiveness
-- [ ] Memory leak / unbounded growth
-
----
-
-**Thank you for reporting!** We'll investigate ASAP.
+## ✔️ Checklist
+- [ ] I have searched existing issues to avoid duplicates
+- [ ] I can reliably reproduce this bug
+- [ ] I have included browser console errors (if any)
