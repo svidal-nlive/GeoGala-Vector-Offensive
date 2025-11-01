@@ -18,9 +18,10 @@
 
 **Movement:**
 - Free 360° movement within screen bounds (no wrapping)
-- Acceleration-based physics (0.2s to max speed)
+- **Instant velocity response** (Chicken Invaders style - no acceleration delay)
 - Max speed: 400 px/s (mobile), 600 px/s (desktop)
-- No inertia on input release (instant stop)
+- **Gentle momentum on input release** (0.15s deceleration to 0, floaty arcade feel)
+- Smooth damping factor: 0.85 per frame (exponential decay)
 
 **Health:**
 - 3 hit points (HP) at start

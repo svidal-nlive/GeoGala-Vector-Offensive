@@ -8,7 +8,7 @@ last_update_utc: 2025-06-15T00:21:00Z
 # Docs Pack Generator — Live Checklist
 
 ## Status Summary
-- Total: 19 • Open: 1 • Done: 18 • Revised: 0 • Blocked: 0
+- Total: 19 • Open: 0 • Done: 19 • Revised: 0 • Blocked: 0
 
 ## Tasks
 - [x] DOCS-PRD — Write PRD.md
@@ -29,13 +29,13 @@ last_update_utc: 2025-06-15T00:21:00Z
 - [x] DOCS-ROOT — Root configs (package.json/tokens.css/vite/gitignore)
 - [x] DOCS-ISSUE — Issue / PR templates
 - [x] DOCS-LIC — Add LICENSE (MIT)
-- [ ] DOCS-PR — Open PR "docs: initial documentation pack"
+- [x] DOCS-PR — Open PR "docs: initial documentation pack"
 
 ## Revisions & Adjustments
 (list task-id, rev#, timestamp, summary, link)
 
 ## Links
-(PRs, Issues, Builds)
+- PR #2: https://github.com/svidal-nlive/GeoGala-Vector-Offensive/pull/2
 
 ## Audit Trail
 | UTC Timestamp | Action | Target | Link |

@@ -62,6 +62,8 @@ npm run preview
 | [Systems-API.md](docs/Systems-API.md) | API reference for game systems |
 | [Balance.md](docs/Balance.md) | Gameplay tuning values |
 | [Assets.md](docs/Assets.md) | Asset manifest, licensing |
+| **[Asset-Enhancement-Spec.md](docs/Asset-Enhancement-Spec.md)** | **🎨 Visual asset specifications & rendering** |
+| **[Visual-Asset-Atlas.md](docs/Visual-Asset-Atlas.md)** | **🎨 Asset reference & implementation guide** |
 | [Testing.md](docs/Testing.md) | QA matrix, performance budgets |
 | [Release.md](docs/Release.md) | Build & deployment guide |
 | [Security.md](docs/Security.md) | Security policies, MCP tools |

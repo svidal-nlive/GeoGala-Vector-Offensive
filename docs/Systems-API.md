@@ -46,10 +46,32 @@ class System {
 class MovementSystem extends System {
   constructor() {
     super('Movement');
+    this.DAMPING = 0.85; // Chicken Invaders floaty feel
   }
   
-  update(entities, dt) {
+  update(entities, dt, input) {
     entities.forEach(entity => {
+      // Player movement (Chicken Invaders style)
+      if (entity.type === 'player') {
+        const movement = input.getMovement();
+        const maxSpeed = entity.isMobile ? 400 : 600;
+        
+        // Instant velocity response (no acceleration)
+        if (movement.x !== 0 || movement.y !== 0) {
+          entity.vx = movement.x * maxSpeed;
+          entity.vy = movement.y * maxSpeed;
+        } else {
+          // Gentle momentum decay when input released
+          entity.vx *= this.DAMPING;
+          entity.vy *= this.DAMPING;
+          
+          // Stop completely when velocity is negligible
+          if (Math.abs(entity.vx) < 1) entity.vx = 0;
+          if (Math.abs(entity.vy) < 1) entity.vy = 0;
+        }
+      }
+      
+      // Update position
       if (!entity.vx && !entity.vy) return;
       
       entity.x += entity.vx * (dt / 1000);
@@ -72,6 +94,13 @@ class MovementSystem extends System {
 - `vy: number` — Y velocity (px/s)
 - `type: string` — Entity type
 - `radius: number` — For boundary clamping
+- `isMobile: boolean` — Platform detection (affects max speed)
+
+**Movement Characteristics:**
+- **Instant response:** Velocity set immediately to max speed in input direction
+- **No acceleration:** Unlike physics-based movement, reaches max speed instantly
+- **Gentle deceleration:** 0.85 damping factor per frame (~0.15s to stop)
+- **Floaty arcade feel:** Momentum continues briefly after input release (Chicken Invaders behavior)
 
 ---
 
