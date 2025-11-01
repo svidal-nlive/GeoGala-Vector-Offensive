@@ -1,0 +1,33 @@
+{
+  "name": "geogala-vector-offensive",
+  "version": "1.0.0",
+  "description": "A modern arcade fixed-shooter featuring geometric factions in a neon bullet ballet",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write \"src/**/*.{js,css,html}\""
+  },
+  "keywords": [
+    "game",
+    "arcade",
+    "shooter",
+    "canvas",
+    "geometry",
+    "neon"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

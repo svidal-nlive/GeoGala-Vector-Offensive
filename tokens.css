@@ -1,0 +1,58 @@
+:root {
+  /* === Background Colors === */
+  --color-bg-void: #0A0E1A;
+  --color-bg-grid: #151B2E;
+
+  /* === Player Colors === */
+  --color-player-primary: #00FFFF;
+  --color-player-glow: #00D4FF;
+  --color-player-damaged: #FF3366;
+
+  /* === Faction Colors === */
+  --color-order: #00FF88;
+  --color-chaos: #FF6B35;
+  --color-fractal: #8B5CF6;
+  --color-singularity: #FFD60A;
+
+  /* === UI Colors === */
+  --color-ui-text: #E0E6F0;
+  --color-ui-accent: #00FFFF;
+  --color-ui-warning: #FFB800;
+  --color-ui-danger: #FF3366;
+  --color-ui-success: #00FF88;
+
+  /* === Power-up Colors === */
+  --color-pickup-power: #00AAFF;
+  --color-pickup-heat: #00FFFF;
+  --color-pickup-health: #00FF88;
+  --color-pickup-missile: #FFD60A;
+  --color-pickup-score: #FFFFFF;
+
+  /* === Typography === */
+  --font-primary: 'Orbitron', 'Rajdhani', 'Exo 2', sans-serif;
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+
+  /* === Type Scale === */
+  --text-xs: clamp(0.75rem, 2vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 2.5vw, 1rem);
+  --text-base: clamp(1rem, 3vw, 1.125rem);
+  --text-lg: clamp(1.25rem, 4vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 5vw, 2rem);
+  --text-2xl: clamp(2rem, 7vw, 3rem);
+  --text-3xl: clamp(3rem, 10vw, 4rem);
+
+  /* === Spacing === */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+  --space-12: 6rem;
+
+  /* === Animation Easings === */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
