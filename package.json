@@ -1,6 +1,6 @@
 {
   "name": "geogala-vector-offensive",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A modern vertical fixed-shooter inspired by Galaga and Chicken Invaders, featuring geometric enemies and deep upgrade systems.",
   "type": "module",
   "main": "src/main.js",
