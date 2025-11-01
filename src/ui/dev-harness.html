@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Preview - Geo Gala: Vector Offensive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: #0A0E1A;
+      color: #E0E6F0;
+      overflow: hidden;
+    }
+    
+    #gameCanvas {
+      display: block;
+      margin: 0 auto;
+      background: radial-gradient(circle at 50% 50%, #151B2E 0%, #0A0E1A 100%);
+      image-rendering: crisp-edges;
+    }
+    
+    #controls {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(21, 27, 46, 0.9);
+      border: 2px solid #1A2332;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+    
+    #controls h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: #00FFFF;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    #controls button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+      background: #1A2332;
+      color: #00FFFF;
+      border: 1px solid #00FFFF;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    
+    #controls button:hover {
+      background: #00FFFF;
+      color: #0A0E1A;
+      box-shadow: 0 0 10px #00FFFF;
+    }
+    
+    #controls button:active {
+      transform: scale(0.95);
+    }
+    
+    .divider {
+      height: 1px;
+      background: #1A2332;
+      margin: 10px 0;
+    }
+    
+    .status {
+      color: #FFB800;
+      font-size: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <h3>UI PREVIEW</h3>
+    
+    <button onclick="demo.showTitleScreen()">Show Title Screen</button>
+    <button onclick="demo.showPauseScreen()">Show Pause Screen</button>
+    <button onclick="demo.showGameOverScreen()">Show Game Over</button>
+    <button onclick="demo.showUpgradeScreen()">Show Upgrade Screen</button>
+    <button onclick="demo.hideOverlay()">Hide Overlay</button>
+    
+    <div class="divider"></div>
+    
+    <button onclick="demo.animateHeartLost()">Lose Heart</button>
+    <button onclick="demo.animateHeartGained()">Gain Heart</button>
+    <button onclick="demo.increaseScore()">Increase Score</button>
+    <button onclick="demo.increaseHeat()">Increase Heat</button>
+    <button onclick="demo.increasePower()">Increase Power</button>
+    <button onclick="demo.nextWave()">Next Wave</button>
+    
+    <div class="divider"></div>
+    
+    <button onclick="demo.spawnExplosion()">Explosion</button>
+    <button onclick="demo.spawnNuke()">Nuke</button>
+    <button onclick="demo.spawnPlayerDeath()">Player Death</button>
+    <button onclick="demo.spawnTrails()">Bullet Trails</button>
+    <button onclick="demo.spawnSparks()">Sparks</button>
+    
+    <div class="divider"></div>
+    
+    <button onclick="demo.toggleDebug()">Toggle Debug (F3)</button>
+    <button onclick="demo.resetState()">Reset State</button>
+    
+    <div class="status">
+      Status: <span id="status">Ready</span>
+    </div>
+  </div>
+  
+  <canvas id="gameCanvas"></canvas>
+  
+  <script type="module">
+    import { UIManager } from './src/ui/UIManager.js';
+    
+    class UIDemo {
+      constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        
+        // Resize canvas to window
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+        
+        // Game state
+        this.gameState = {
+          hp: 3,
+          maxHP: 3,
+          heat: 0,
+          score: 0,
+          powerLevel: 0,
+          wave: 1,
+          missiles: 3,
+          nukes: 1,
+          entityCount: 42,
+          joystickState: { x: 0, y: 0, active: false }
+        };
+        
+        // Initialize UI Manager
+        this.uiManager = new UIManager(this.canvas, this.gameState);
+        
+        // Simulate bullet trails
+        this.trails = [];
+        
+        // Start animation loop
+        this.lastTime = performance.now();
+        this.animate();
+        
+        // Keyboard controls
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'F3') {
+            this.toggleDebug();
+          } else if (e.key === ' ') {
+            this.hideOverlay();
+          } else if (e.key === 'Escape') {
+            this.showPauseScreen();
+          }
+        });
+        
+        // Status updates
+        window.demo = this;
+        this.updateStatus('Ready - Click buttons to test UI');
+      }
+      
+      resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.uiManager.handleResize();
+      }
+      
+      animate() {
+        const now = performance.now();
+        const dt = now - this.lastTime;
+        this.lastTime = now;
+        
+        // Clear canvas
+        this.ctx.fillStyle = '#0A0E1A';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw background grid
+        this.drawGrid();
+        
+        // Update and render UI
+        this.uiManager.update(dt);
+        this.uiManager.render();
+        
+        // Update trails
+        this.updateTrails(dt);
+        
+        requestAnimationFrame(() => this.animate());
+      }
+      
+      drawGrid() {
+        this.ctx.strokeStyle = 'rgba(26, 35, 50, 0.3)';
+        this.ctx.lineWidth = 1;
+        
+        const spacing = 40;
+        
+        for (let x = 0; x < this.canvas.width; x += spacing) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x, 0);
+          this.ctx.lineTo(x, this.canvas.height);
+          this.ctx.stroke();
+        }
+        
+        for (let y = 0; y < this.canvas.height; y += spacing) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, y);
+          this.ctx.lineTo(this.canvas.width, y);
+          this.ctx.stroke();
+        }
+      }
+      
+      updateTrails(dt) {
+        for (const trail of this.trails) {
+          trail.x += trail.vx * dt * 0.001;
+          trail.y += trail.vy * dt * 0.001;
+          
+          // Emit trail particles
+          if (Math.random() < 0.3) {
+            this.uiManager.emitTrail(trail.x, trail.y, trail.vx, trail.vy, trail.color);
+          }
+          
+          // Remove off-screen trails
+          if (trail.x < 0 || trail.x > this.canvas.width || 
+              trail.y < 0 || trail.y > this.canvas.height) {
+            this.trails.splice(this.trails.indexOf(trail), 1);
+          }
+        }
+      }
+      
+      // UI Controls
+      showTitleScreen() {
+        this.uiManager.showTitleScreen();
+        this.updateStatus('Title screen displayed');
+      }
+      
+      showPauseScreen() {
+        this.uiManager.showPauseScreen();
+        this.updateStatus('Pause screen displayed');
+      }
+      
+      showGameOverScreen() {
+        this.uiManager.showGameOverScreen({
+          finalScore: this.gameState.score,
+          wavesCleared: this.gameState.wave - 1,
+          accuracy: 72.5 + Math.random() * 20,
+          highScore: this.gameState.score > 100000
+        });
+        this.updateStatus('Game over screen displayed');
+      }
+      
+      showUpgradeScreen() {
+        this.uiManager.showUpgradeScreen();
+        this.updateStatus('Upgrade screen displayed');
+      }
+      
+      hideOverlay() {
+        this.uiManager.hideOverlay();
+        this.updateStatus('Overlay hidden');
+      }
+      
+      // HUD Controls
+      animateHeartLost() {
+        if (this.gameState.hp > 0) {
+          this.gameState.hp--;
+          this.uiManager.animateHeartLost(this.gameState.hp);
+          this.updateStatus(`HP lost: ${this.gameState.hp}/${this.gameState.maxHP}`);
+        }
+      }
+      
+      animateHeartGained() {
+        if (this.gameState.hp < this.gameState.maxHP) {
+          this.uiManager.animateHeartGained(this.gameState.hp);
+          this.gameState.hp++;
+          this.updateStatus(`HP gained: ${this.gameState.hp}/${this.gameState.maxHP}`);
+        }
+      }
+      
+      increaseScore() {
+        const increase = Math.floor(Math.random() * 5000) + 1000;
+        this.gameState.score += increase;
+        this.updateStatus(`Score +${increase}: ${this.gameState.score.toLocaleString()}`);
+      }
+      
+      increaseHeat() {
+        this.gameState.heat = Math.min(100, this.gameState.heat + 15);
+        this.updateStatus(`Heat: ${this.gameState.heat.toFixed(1)}%`);
+      }
+      
+      increasePower() {
+        this.gameState.powerLevel = (this.gameState.powerLevel + 1) % 11;
+        this.updateStatus(`Power level: ${this.gameState.powerLevel}/10`);
+      }
+      
+      nextWave() {
+        this.gameState.wave++;
+        this.uiManager.animateWaveStart();
+        this.updateStatus(`Wave ${this.gameState.wave} started`);
+      }
+      
+      // Particle Controls
+      spawnExplosion() {
+        const x = Math.random() * this.canvas.width;
+        const y = Math.random() * this.canvas.height;
+        const colors = ['#FF6B35', '#FF3366', '#FFB800', '#00FFFF', '#00FF88'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        this.uiManager.emitExplosion(x, y, color);
+        this.updateStatus('Explosion spawned');
+      }
+      
+      spawnNuke() {
+        const x = this.canvas.width / 2;
+        const y = this.canvas.height / 2;
+        this.uiManager.emitNuke(x, y);
+        this.updateStatus('Nuke explosion spawned');
+      }
+      
+      spawnPlayerDeath() {
+        const x = this.canvas.width / 2;
+        const y = this.canvas.height - 100;
+        this.uiManager.emitPlayerDeath(x, y);
+        this.updateStatus('Player death particles spawned');
+      }
+      
+      spawnTrails() {
+        for (let i = 0; i < 5; i++) {
+          const x = this.canvas.width / 2 + (Math.random() - 0.5) * 100;
+          const y = this.canvas.height - 100;
+          const angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.5;
+          const speed = 300 + Math.random() * 200;
+          
+          this.trails.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color: '#00D4FF'
+          });
+        }
+        this.updateStatus('Bullet trails spawned');
+      }
+      
+      spawnSparks() {
+        const x = Math.random() * this.canvas.width;
+        const y = Math.random() * this.canvas.height;
+        const normalX = Math.random() - 0.5;
+        const normalY = Math.random() - 0.5;
+        this.uiManager.emitSparks(x, y, normalX, normalY);
+        this.updateStatus('Collision sparks spawned');
+      }
+      
+      // Debug
+      toggleDebug() {
+        this.uiManager.toggleDebug();
+        this.updateStatus('Debug overlay toggled');
+      }
+      
+      resetState() {
+        this.gameState.hp = 3;
+        this.gameState.heat = 0;
+        this.gameState.score = 0;
+        this.gameState.powerLevel = 0;
+        this.gameState.wave = 1;
+        this.gameState.missiles = 3;
+        this.gameState.nukes = 1;
+        this.uiManager.clearParticles();
+        this.trails = [];
+        this.updateStatus('State reset');
+      }
+      
+      updateStatus(message) {
+        document.getElementById('status').textContent = message;
+      }
+    }
+    
+    // Initialize demo
+    new UIDemo();
+  </script>
+</body>
+</html>
